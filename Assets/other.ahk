@@ -76,20 +76,20 @@ getCameraState(){
 	Return InStr(state,"true")>0
 }
 CameraMode(t){
-	Global AutoCameraDelay,CameraModeX,CameraModeY
-	Sleep AutoCameraDelay
+	Global CameraDelay,CameraModeX,CameraModeY
+	Sleep CameraDelay
 	If getCameraState()!=t
 		Click %CameraModeX%,%CameraModeY%
-	Sleep AutoCameraDelay
+	Sleep CameraDelay
 }
 ;leaving this here incase they remove the debugger
 ;CameraMode(t){
-;	Global AutoCameraDelay,CameraCheckLeft,CameraCheckTop,CameraCheckRight,CameraCheckBottom,CameraModeX,CameraModeY
-;	Sleep AutoCameraDelay
+;	Global CameraDelay,CameraCheckLeft,CameraCheckTop,CameraCheckRight,CameraCheckBottom,CameraModeX,CameraModeY
+;	Sleep CameraDelay
 ;	PixelSearch,,,CameraCheckLeft,CameraCheckTop,CameraCheckRight,CameraCheckBottom,0xFFFFFF,0,Fast
 ;	If !ErrorLevel=t
 ;		Click %CameraModeX%,%CameraModeY%
-;	Sleep AutoCameraDelay
+;	Sleep CameraDelay
 ;}
 FetchInstructions(){
 	req:=ComObjCreate("WinHttp.WinHttpRequest.5.1")

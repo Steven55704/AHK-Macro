@@ -306,7 +306,7 @@ StartMacro:
 	If GuiAlwaysOnTop
 		GuiControl,Choose,Tabs,1
 	SetTimer,Failsafe3,1000
-	If AutoLowerGraphics{
+	If LowerGraphics{
 		UpdateTask("Current Task: Lower Graphics")
 		Sleep GraphicsDelay/2
 		Send {Shift}
@@ -317,7 +317,7 @@ StartMacro:
 		Send {Shift up}
 		Sleep GraphicsDelay/2
 	}
-	If ZoomInCamera{
+	If ZoomCamera{
 		UpdateTask("Current Task: Zoom Camera")
 		Sleep ZoomDelay
 		Loop,20{
@@ -417,7 +417,7 @@ RestartMacro:
 		cryoCanal.CF:=True
 	}
 	MouseMove,LookDownX,LookDownY
-	If LookDownCamera{
+	If LookCamera{
 		UpdateTask("Current Task: Look Down")
 		Send {RButton up}
 		Loop,5{
@@ -432,7 +432,7 @@ RestartMacro:
 		MouseMove,LookDownX,LookDownY
 		Sleep LookDelay
 	}
-	If BlurShakeCamera{
+	If BlurCamera{
 		UpdateTask("Current Task: Blur Camera")
 		Sleep BlurDelay
 		Send m

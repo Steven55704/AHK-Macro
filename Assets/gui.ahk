@@ -434,7 +434,7 @@ InitGui:
 		SendFishWhenTimeOn:=CBFTSO
 		SendFishWhenTimeValue:=CBFTSV
 		ShowTooltips:=CBST
-		ShakeFailsafe:=SHF
+		; ShakeFailsafe:=SHF
 		BarControl:=BRC
 		ManualBarSize:=(BRC="auto")?0:0.403691381*WW*(0.3+BRC)
 

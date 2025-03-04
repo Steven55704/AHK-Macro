@@ -1,4 +1,4 @@
-;17
+;19
 #Include ..\main.ahk
 
 CheckFocus() {
@@ -189,6 +189,15 @@ InitGui:
 	Gui Add,Edit,vMGSW x198 y96 w52 h17 gNumberEdit,%SideBarWait%
 	Gui Add,Edit,vMGCO x198 y116 w52 h17 gNumberEdit,%Coefficient%
 	Gui Add,Edit,vMGXP x198 y136 w52 h17 gNumberEdit,%Exponent%
+	Gui Add,GroupBox,x255 y46 w192 h128, Misc
+	Gui Font,w600
+	Gui Add,Text,x258 y79 w96 h16, Manual Bar Size
+	Gui Font
+	Gui Add,Edit,gSubAll vBRC x294 y94 w36 h18,% ZTrim(BarControl)
+	Gui Add,Text,x258 y97 w36 h14,Control
+	Gui Add,Text,x333 y96 w133 h14,* Set to "Auto" for auto.
+	Gui Add,Button,gShowBar x260 y116 w80 h23,Visualize Bar
+	Gui Add,Button,gHideBar x+1 y116 w80 h23,Hide Bar
 
 	; -------------------------------- TAB Locations --------------------------------
 	Gui Tab,5
@@ -265,7 +274,7 @@ InitGui:
 	Gui Add,Text,x6 y+4 w257 h14,Gui, modified minigame, polishing, and webhook by me.
 	Gui Add,Text,x6 y+4 w257 h14,Image webhook provided by @lunarosity, embed by me.
 	Gui Add,Text,x6 y+4 w257 h14,Themes and Lvl checker provided by @toxgt
-	Gui Add,Text,x6 y+4 w257 h14,Accurate Camera mode by @b0red_man
+	Gui Add,Text,x6 y+4 w270 h14,Accurate Camera mode(sadly patched) by @b0red_man
 	Gui Add,Text,x6 y+4 w257 h14,Fish image webhook by @b0red_man
 	Gui Add,Text,x6 y+4 w257 h14,Logo design by @grubrescue
 	;Gui Add,Link,x6 y+4 w252 h14,Check out my <a href="https://github.com/LopenaFollower">GitHub</a> and <a href="https://discord.gg/Fh5rmgg27X">Discord Server</a>
@@ -425,6 +434,10 @@ InitGui:
 		SendFishWhenTimeOn:=CBFTSO
 		SendFishWhenTimeValue:=CBFTSV
 		ShowTooltips:=CBST
+		ShakeFailsafe:=SHF
+		BarControl:=BRC
+		ManualBarSize:=(BRC="auto")?0:0.403691381*WW*(0.3+BRC)
+
 		If Trim(DDBN)!=""
 			Gosub SelectBound
 		If CBCF
@@ -558,6 +571,12 @@ InitGui:
 		If StrLen(PSL)>32
 			PS:=PSL
 		Run % PS
+	Return
+	ShowBar:
+		CreateBound("Bar",(WW-ManualBarSize)/2,FishBarTop,(WW+ManualBarSize)/2,FishBarBottom)
+	Return
+	HideBar:
+		Gui Bar:Destroy
 	Return
 Return
 GuiClose:

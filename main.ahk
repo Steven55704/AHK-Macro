@@ -2,7 +2,8 @@
 #SingleInstance Force
 #Persistent
 #KeyHistory 0
-#MaxHotkeysPerInterval 128
+#MaxMem 6969
+#MaxHotkeysPerInterval 256
 #HotkeyInterval 1
 SetWinDelay,-1
 
@@ -33,13 +34,17 @@ SetControlDelay,-1
 SetTitleMatchMode 2
 CoordMode,Pixel,Relative
 CoordMode,Mouse,Relative
+
 #Include %A_ScriptDir%\Lib
 #Include Gdip_All.ahk
+
 VersionNum:=1
 ChangeNum:=0
-BuildNum:=1
+BuildNum:=2
 GuiTitle=Fisch V%VersionNum%.%ChangeNum%.%BuildNum% by blankimage
 DirPath:=A_ScriptDir
+WW:=A_ScreenWidth
+WH:=A_ScreenHeight
 LibPath:=DirPath "\Lib"
 DllCall("LoadLibrary","Str",LibPath "\SkinHu.dll")
 MGPath:=DirPath "\Minigame"
@@ -61,14 +66,14 @@ If !FileExist(DefMGPath)
 If !FileExist(VersionPath)
 	FileAppend,%VersionNum%.%ChangeNum% %BuildNum%,%VersionPath%
 IniRead,curVer,%SettingsPath%,.,v
-configVer:="14"
+configVer:="15"
 If(curVer!=configVer){
 	Gosub DefaultSettings
 	IniWrite,%configVer%,%SettingsPath%,.,v
 }
 
 
-
+ReadGen(BarControl,"Control")
 ReadGen(ShakeMode,"ShakeMode")
 ReadGen(NavigationKey,"NavKey")
 ReadGen(ShakeDelay,"ShakeDelay")
@@ -148,7 +153,7 @@ BarColor2:=0xF1F1F1
 BarCalcColor:=0xF0F0F0
 ArrowColor:=0x878584
 FishColor:=0x5B4B43
-ManualBarSize:=0
+ManualBarSize:=(BarControl="auto")?0:0.403691381*WW*(0.3+BarControl)
 Test1:=0
 Test2:=0
 MSD:=250
@@ -163,8 +168,6 @@ cryoCanal:={CF:False}
 XOdebounce:=True
 SelectedBound:=""
 boundNames:=["CameraCheck","FishBar","ProgBar","LvlCheck","SellProfit","CameraMode","SellButton"]
-WW:=A_ScreenWidth
-WH:=A_ScreenHeight
 instructions:=FetchInstructions()
 SetTimer,GuiRuntime,1000
 Gosub Calculations
@@ -176,6 +179,7 @@ Hotkey % "$"ExitHotkey,ExitMacro
 SendStatus(0)
 Return
 DefaultSettings:
+	RtrvGen("Control","Auto")
 	RtrvGen("ShakeMode","Click")
 	RtrvGen("NavKey","\")
 	RtrvGen("ShakeDelay",35)
@@ -225,6 +229,7 @@ DefaultSettings:
 	RtrvGen("ShowTooltips",0)
 Return
 SaveSettings:
+	WriteGen("Control",BarControl)
 	WriteGen("ShakeMode",ShakeMode)
 	WriteGen("NavKey",NavigationKey)
 	WriteGen("ShakeDelay",ShakeDelay)
@@ -299,7 +304,9 @@ MoveGui:
 Return
 StartMacro:
 	WinActivate,Roblox
-	WinMaximize,Roblox
+	WinMaximize,
+	Gosub HideBounds
+	Gosub HideBar
 	SendStatus(1)
 	Sleep 150
 	Gosub MoveGui
@@ -344,6 +351,12 @@ StartMacro:
 Return
 RestartMacro:
 	WinActivate,Roblox
+	If AutoBlurShake{
+		UpdateTask("Current Task: Blur Camera")
+		Sleep 500
+		Send {``}
+		Sleep AutoBlurDelay
+	}
 	If(FarmLocation=="cryo"&&!cryoCanal.CF){
 		UpdateTask("Current Task: Walking To Cryogenic Canal")
 		Click 0,500
@@ -432,12 +445,6 @@ RestartMacro:
 		MouseMove,LookDownX,LookDownY
 		Sleep LookDelay
 	}
-	If BlurCamera{
-		UpdateTask("Current Task: Blur Camera")
-		Sleep BlurDelay
-		Send m
-		Sleep BlurDelay
-	}
 	UpdateTask("Current Task: Cast Rod")
 	Send {LButton down}
 	Random,RCD,0,CastRandomization*2
@@ -491,6 +498,10 @@ Return
 backUp:
 	cryoCanal.CF:=False
 	Sleep 200
+	If BlurMinigame
+		Send {``}
+	CameraMode(False)
+	Sleep 150
 	If buyConch{
 		Send {s down}
 		Sleep 600

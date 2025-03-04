@@ -280,6 +280,7 @@ InitGui:
 	;Gui Add,Link,x6 y+4 w252 h14,Check out my <a href="https://github.com/LopenaFollower">GitHub</a> and <a href="https://discord.gg/Fh5rmgg27X">Discord Server</a>
 	Gui Show,w500 h200,%GuiTitle%
 	Return
+	
 	TTT:
 		Gui Submit,NoHide
 		c:=A_GuiControl
@@ -354,18 +355,6 @@ InitGui:
 			NavigationKey:=NK
 		If StrLen(SD)>0
 			ShakeDelay:=SD
-		if StrLen(SF)>0
-			ShakeFailsafe:=SF
-		if StrLen(GD)>0
-			GraphicsDelay:=GD
-		if StrLen(ZD)>0
-			ZoomDelay:=ZD
-		if StrLen(LD)>0
-			LookDelay:=LD
-		if StrLen(BD)>0
-			BlurDelay:=BD
-		if StrLen(FL)>0
-			FailLimit:=FL
 		If StrLen(DLRL)>0
 			RestartDelay:=DLRL
 		If StrLen(DLHR)>0
@@ -408,6 +397,7 @@ InitGui:
 				ShowMsg("Hotkey in use")
 			}
 		}
+
 		ShakeMode:=DDSM
 		LowerGraphics:=CBLG
 		ZoomCamera:=CBZC
@@ -434,7 +424,12 @@ InitGui:
 		SendFishWhenTimeOn:=CBFTSO
 		SendFishWhenTimeValue:=CBFTSV
 		ShowTooltips:=CBST
-		; ShakeFailsafe:=SHF
+		ShakeFailsafe:=SF
+		GraphicsDelay:=GD
+		ZoomDelay:=ZD
+		LookDelay:=LD
+		BlurDelay:=BD
+		FailLimit:=FL
 		BarControl:=BRC
 		ManualBarSize:=(BRC="auto")?0:0.403691381*WW*(0.3+BRC)
 

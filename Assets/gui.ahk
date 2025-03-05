@@ -1,12 +1,5 @@
 ;19
 #Include ..\main.ahk
-
-CheckFocus() {
-    GuiControlGet, focusedControl, FocusV  ; Get the currently focused control
-    if (focusedControl != "FL")  ; If it's NOT the FailLimit box
-        GuiControl, Focus, Dummy  ; Move focus to an invisible control
-}
-
 InitGui:
 	If !FileExist(LogoPath)
 		UrlDownloadToFile,https://raw.githubusercontent.com/LopenaFollower/AHK/refs/heads/main/Fisch`%20Releases/Assets/logo.ico,%LogoPath%
@@ -16,9 +9,8 @@ InitGui:
 		MsgBox,16,,iamangrybird detected,1
 	}
 
-	Gui +LastFound -MinimizeBox -MaximizeBox +AlwaysOnTop
-	Gui Add,Tab3,vTabs x0 y0 w600 h300,Info|Main|Webhook|Minigame|Locations|Misc|Manual Setup|Credits
-	Gui, Add, Text, x10 y150 w1 h1 vDummy
+	Gui -MinimizeBox -MaximizeBox +AlwaysOnTop
+	Gui Add,Tab3,vTabs x0 y0 w450 h176,Info|Main|Webhook|Minigame|Locations|Misc|Manual Setup|Credits
 
 	; -------------------------------- TAB Info --------------------------------
 	Gui Tab,1
@@ -193,7 +185,7 @@ InitGui:
 	Gui Font,w600
 	Gui Add,Text,x258 y79 w96 h16, Manual Bar Size
 	Gui Font
-	Gui Add,Edit,gSubAll vBRC x294 y94 w36 h18,% ZTrim(BarControl)
+	Gui Add,Edit,gSubAll vBRC x331 y56 w36 h18,% ZTrim(BarControl)
 	Gui Add,Text,x258 y97 w36 h14,Control
 	Gui Add,Text,x333 y96 w133 h14,* Set to "Auto" for auto.
 	Gui Add,Button,gShowBar x260 y116 w80 h23,Visualize Bar
@@ -214,7 +206,7 @@ InitGui:
 	; -------------------------------- TAB Misc --------------------------------
 	Gui Tab,6
 	AOT:=Chkd(GuiAlwaysOnTop)
-	Gui Add,CheckBox,vCBOT gSubAll x9 y24 w90 h14 %AOT%,Always On Top
+	Gui Add,CheckBox,vCBOT gSubAll x4 y24 w90 h14 %AOT%,Always On Top
 	Gui,Add,Text,x4 y44 w44 h14,Themes:
 	Gui,Add,ComboBox,vDDSL gChangeTheme x50 y40 w120 h100,
 	Loop,%SkinsPath%\*.she
@@ -223,6 +215,17 @@ InitGui:
 	Gui Add,CheckBox,vCBGS gSubAll x5 y64 w125 h13 %UAS%,Auto Sell (Gamepass)
 	Gui Add,Edit,vASIG gSubAll x60 y78 w28 h18,%AutoSellInterval%
 	Gui Add,Text,x4 y79 w56 h18,Sell Interval
+
+	; -------------------------------- TAB Misc GROUP Totem --------------------------------
+	Gui Font,w600
+	Gui Add,GroupBox,x2 y96 w120 h60,Totem
+	Gui Font
+	AA:=Chkd(AutoAurora),AN:=Chkd(AutoNight),AD:=Chkd(AutoDay)
+	Gui Add,CheckBox,vCBAA gSubAll x4 y110 w90 h14 %AA%,Auto Aurora
+	Gui Add,CheckBox,vCBAN gSubAll x4 y124 w90 h14 %AN%,Auto Night
+	Gui Add,CheckBox,vCBAD gSubAll x4 y138 w90 h14 %AD%,Auto Day
+
+	; -------------------------------- TAB Misc GROUP Tictactoe --------------------------------
 	Gui Add,GroupBox,x302 y22 w146 h154,What is this for?
 	Gui Font,s20
 	Gui Add,Button,vX1Y1 gTTT x304 y33 w48 h48
@@ -397,7 +400,31 @@ InitGui:
 				ShowMsg("Hotkey in use")
 			}
 		}
+		if (CBAA and !CBAN) {
+			GuiControl,, CBAN, 1
+			GuiControl,, CBAD, 0
+			GuiControl, Disable, CBAD
+			return
+		}
+		else if (CBAN) {
+			GuiControl,, CBAD, 0
+			GuiControl, Disable, CBAD
+		}
+		else if (CBAD) {
+			GuiControl,, CBAA, 0
+			GuiControl,, CBAN, 0
+			GuiControl, Disable, CBAA
+			GuiControl, Disable, CBAN
+		}
+		else {
+			GuiControl, Enable, CBAA
+			GuiControl, Enable, CBAN
+			GuiControl, Enable, CBAD
+		}
 
+		AutoAurora:=CBAA
+		AutoNight:=CBAN
+		AutoDay:=CBAD
 		ShakeMode:=DDSM
 		LowerGraphics:=CBLG
 		ZoomCamera:=CBZC

@@ -63,37 +63,36 @@ ErrorMsg(t,m){
 Chkd(b){
 	Return b?"Checked":""
 }
-getCameraState(){
-	EnvGet,LAD,LocalAppData
-	logPath:=LAD "\Roblox\logs"
-	t:=0
-	file:=""
-	Loop,%logPath%\*.log{
-		If((ct:=A_LoopFileTimeModified)>=t&&SubStr(A_LoopFileName,-7,4)="last"){
-			t:=ct
-			file:=A_LoopFileFullPath
-		}
-	}
-	FileRead,state,%file%
-	state:=SubStr(state,InStr(state,"setting cinematic mode to ",False,0),32)
-	Return InStr(state,"true")>0
-}
-CameraMode(t){
-	Global CameraDelay,CameraModeX,CameraModeY
-	Sleep CameraDelay
-	If getCameraState()!=t
-		Click %CameraModeX%,%CameraModeY%
-	Sleep CameraDelay
-}
-;leaving this here incase they remove the debugger
+;getCameraState(){
+;	EnvGet,LAD,LocalAppData
+;	logPath:=LAD "\Roblox\logs"
+;	t:=0
+;	file:=""
+;	Loop,%logPath%\*.log{
+;		If((ct:=A_LoopFileTimeModified)>=t&&SubStr(A_LoopFileName,-7,4)="last"){
+;			t:=ct
+;			file:=A_LoopFileFullPath
+;		}
+;	}
+;	FileRead,state,%file%
+;	state:=SubStr(state,InStr(state,"setting cinematic mode to ",False,0),32)
+;	Return InStr(state,"true")>0
+;}
 ;CameraMode(t){
-;	Global CameraDelay,CameraCheckLeft,CameraCheckTop,CameraCheckRight,CameraCheckBottom,CameraModeX,CameraModeY
+;	Global CameraDelay,CameraModeX,CameraModeY
 ;	Sleep CameraDelay
-;	PixelSearch,,,CameraCheckLeft,CameraCheckTop,CameraCheckRight,CameraCheckBottom,0xFFFFFF,0,Fast
-;	If !ErrorLevel=t
+;	If getCameraState()!=t
 ;		Click %CameraModeX%,%CameraModeY%
 ;	Sleep CameraDelay
 ;}
+CameraMode(t){
+	Global CameraDelay,CameraCheckLeft,CameraCheckTop,CameraCheckRight,CameraCheckBottom,CameraModeX,CameraModeY
+	Sleep CameraDelay
+	PixelSearch,,,CameraCheckLeft,CameraCheckTop,CameraCheckRight,CameraCheckBottom,0xFFFFFF,0,Fast
+	If !ErrorLevel=t
+		Click %CameraModeX%,%CameraModeY%
+	Sleep CameraDelay
+}
 FetchInstructions(){
 	req:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	req.Option(9):=2048
@@ -167,6 +166,28 @@ CaptureScreen(path,x,y,w,h){
 	Gdip_DisposeImage(pB)
 	Gdip_Shutdown(pT)
 	Return True
+}
+downloadTesseract(){
+	Global TesseractPath,GuiAlwaysOnTop,GuiTitle
+	If !FileExist(TesseractPath){
+		Gui +OwnDialogs
+		MsgBox,48,Tesseract Not Found,This feature requires Tesseract OCR to be installed. The script will now download and install it.
+		InstallerPath:=A_Temp "\tesseract-installer.exe"
+		UrlDownloadToFile,https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe,%InstallerPath%
+		If !FileExist(InstallerPath){
+			ErrorMsg("Error","Failed to download the Tesseract installer. Please check your internet connection and try again.")
+			GuiControl,ChooseString,DDSS,Off
+		}
+		WinSet,AlwaysOnTop,0,%GuiTitle%
+		RunWait,%InstallerPath% /SILENT,,Hide
+		WinSet,AlwaysOnTop,%GuiAlwaysOnTop%,%GuiTitle%
+		If FileExist("C:\Program Files\Tesseract-OCR\tesseract.exe")
+			MsgBox,64,Installation Complete,Tesseract OCR has been successfully installed!
+		Else{
+			ErrorMsg("Installation Failed","Tesseract OCR installation failed. Please install it manually at https://github.com/tesseract-ocr/tesseract")
+			GuiControl,ChooseString,DDSS,Off
+		}
+	}
 }
 CS2DC(x1,y1,x2,y2,payload){
 	Global WebhookURL

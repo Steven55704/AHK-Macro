@@ -55,7 +55,7 @@ BarMinigame:
 				Break
 		}
 	}
-	If AutoBlurMinigame
+	If BlurMinigame
 		Send {``}
 	UpdateTask("Current Task: Bar Minigame")
 	HalfBarSize:=WhiteBarSize/2

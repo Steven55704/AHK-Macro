@@ -10,7 +10,7 @@ InitGui:
 	}
 
 	Gui -MinimizeBox -MaximizeBox +AlwaysOnTop
-	Gui Add,Tab3,vTabs x0 y0 w450 h176,Info|Main|Webhook|Minigame|Locations|Misc|Manual Setup|Credits
+	Gui Add,Tab3,vTabs x0 y0 w500 h176,Info|Main|Webhook|Minigame|Locations|Misc|Manual Setup|Credits
 
 	; -------------------------------- TAB Info --------------------------------
 	Gui Tab,1
@@ -22,9 +22,12 @@ InitGui:
 	Gui Add,Text,x5 y54 w90 h16,Macro Runtime
 	Gui Font
 	Gui Add,Text,vTRT2 x6 y70 w56 h13,0h 00m 00s
-	Gui Add,Text,vTTask x5 y87 w162 h14,Current Task: Idle
+	Gui Add,Text,x5 y87 w90 h16,Auto Day'n'Nite
 	Gui Font
-	Gui Add,Text,vTFC x5 y102 w100 h13,Fish Count: 0/0
+	Gui Add,Text,vTRT3 x5 y102 w56 h13,00m 00s
+	Gui Add,Text,vTTask x5 y118 w162 h14,Current Task: Idle
+	Gui Font
+	Gui Add,Text,vTFC x5 y132 w100 h13,Fish Count: 0/0
 
 	; -------------------------------- TAB Main --------------------------------
 	Gui Tab,2
@@ -109,9 +112,9 @@ InitGui:
 
 	; -------------------------------- TAB Webhook GROUP Webhook URL --------------------------------
 	Gui Font,w600
-	Gui Add,GroupBox,x2 y21 w250 h153,Webhook URL
+	Gui Add,GroupBox,x2 y21 w150 h153,Webhook URL
 	Gui Font
-	Gui Add,Edit,vWURL gSubAll x4 y36 w240 h21,%WebhookURL%
+	Gui Add,Edit,vWURL gSubAll x4 y36 w120 h21,%WebhookURL%
 	UWH:=Chkd(UseWebhook)
 	Gui Add,CheckBox,vCBWH gValidateWebhook x4 y59 w100 h14 %UWH%,Enable Webhook
 	Gui Add,Text,x4 y76 w56 h13,Notify every
@@ -121,28 +124,29 @@ InitGui:
 	Gui Add,CheckBox,vCBSI gSubAll x4 y92 w92 h14 %NSI%,Send Img every
 	Gui Add,Edit,vSIEN gSubAll x96 y90 w22 h18,%ImgNotifEveryN%
 	Gui Add,Text,x122 y92 w40 h13,catches.
-	
 
 	; -------------------------------- TAB Webhook GROUP Options --------------------------------
 	Gui Font,w600
-	Gui Add,GroupBox,x254 y21 w244 h153,Options
+	Gui Add,GroupBox,x125 y21 w322 h153,Options
 	Gui Font
-	NOF:=Chkd(NotifyOnFailsafe),NOL:=Chkd(NotifyOnLevelup),SFL:=Chkd(SendScreenshotFL)
-	Gui Add,CheckBox,vCBNF gSubAll x260 y35 w100 h14 %NOF%,Notify on Failsafe
-	Gui Add,CheckBox,vCBSS gSubAll x260 y51 w114 h14 %SFL%,Send SS on fish lost
-	Gui Add,CheckBox,vCBNL gSubAll x260 y68 w120 h14 %NOL%,Send SS on level up
-	Gui Add,Text,x260 y87 w62 h13,Check every
-	Gui Add,Edit,vCLEN gSubAll x322 y85 w26 h18 Number,%CheckLvlEveryN%
-	Gui Add,Text,x350 y87 w40 h13,catches.
+	NOF:=Chkd(NotifyOnFailsafe),SFL:=Chkd(SendScreenshotFL)
+	Gui Add,CheckBox,vCBNF gSubAll x129 y35 w100 h14 %NOF%,Notify on Failsafe
+	Gui Add,CheckBox,vCBSS gSubAll x129 y51 w114 h14 %SFL%,Send SS on fish lost
+	ListVal:=(LvlUpMode="off")?"Off||Txt|Img":(LvlUpMode="txt")?"Off|Txt||Img":"Off|Txt|Img||"
+	Gui Add,DropDownList,vDDSS gSubAll x129 y66 w42,%ListVal%
+	Gui Add,Text,x174 y70 w84 h14,Notify on level up
+	Gui Add,Text,x129 y87 w62 h13,Check every
+	Gui Add,Edit,vCLEN gSubAll x190 y85 w26 h18 Number,%CheckLvlEveryN%
+	Gui Add,Text,x218 y87 w40 h13,catches.
 	SSP:=Chkd(SendSellProfit)
-	Gui Add,CheckBox,vCBSP gSubAll x260 y104 w154 h14 %SSP%,Send Sell Profits (Gamepass)
+	Gui Add,CheckBox,vCBSP gSubAll x129 y104 w154 h14 %SSP%,Send Sell Profits (Gamepass)
 	SFS:=Chkd(SendFishScreenshot),SFWT:=Chkd(SendFishWhenTimeOn)
-	Gui Add,CheckBox,vCBFSS gSubAll x260 y120 w174 h14 %SFS%,Send Fish Screenshot on Catch
-	Gui Add,Text,x260 y138,% "Screenshot Delay:"
-	Gui Add,Edit,gSubAll vSSD x348 y136 w40 h18 Number,%ScreenshotDelay%
-	Gui Add,CheckBox,vCBFTSO gSubAll x260 y155 h14 %SFWT%,Only Send if Catch Time < 
-	Gui Add,Edit,vCBFTSV gSubAll x402 y153 w26 h18 Number,%SendFishWhenTimeValue%
-	Gui Add,Text,x285 y155,seconds
+	Gui Add,CheckBox,vCBFSS gSubAll x129 y120 w174 h14 %SFS%,Send Fish Screenshot on Catch
+	Gui Add,Text,x129 y138,% "Screenshot Delay:"
+	Gui Add,Edit,gSubAll vSSD x219 y136 w40 h18 Number,%ScreenshotDelay%
+	Gui Add,CheckBox,vCBFTSO gSubAll x129 y155 h14 %SFWT%,Only Send if Catch Time < 
+	Gui Add,Edit,vCBFTSV gSubAll x275 y153 w26 h18 Number,%SendFishWhenTimeValue%
+	Gui Add,Text,x305 y155,seconds
 
 	; -------------------------------- TAB Minigame --------------------------------
 	Gui Tab,4
@@ -152,6 +156,8 @@ InitGui:
 	Gui Add,Button,gMGExport x143 y23 w70 h23,New Config
 	Gui Add,Button,gMGOpen x213 y23 w70 h23,Open Folder
 	Gui Add,Button,gMGRefresh x283 y23 w70 h23,Scan Folder
+
+	; -------------------------------- TAB Minigame GROUP Left --------------------------------
 	Gui Font,w600
 	Gui Add,GroupBox,x2 y46 w120 h52,Left
 	Gui Font
@@ -159,6 +165,8 @@ InitGui:
 	Gui Add,Text,x9 y77 w32 h14,Divisor
 	Gui Add,Edit,vMGLM x68 y56 w52 h17 gNumberEdit,%LeftMult%
 	Gui Add,Edit,vMGLD x68 y76 w52 h17 gNumberEdit,%LeftDiv%
+
+	; -------------------------------- TAB Minigame GROUP Right --------------------------------
 	Gui Font,w600
 	Gui Add,GroupBox,x2 y98 w120 h76,Right
 	Gui Font
@@ -168,8 +176,10 @@ InitGui:
 	Gui Add,Edit,vMGRM x68 y108 w52 h17 gNumberEdit,%RightMult%
 	Gui Add,Edit,vMGRD x68 y128 w52 h17 gNumberEdit,%RightDiv%
 	Gui Add,Edit,vMGAM x68 y148 w52 h17 gNumberEdit,%RightAnkleMult%
+
+	; -------------------------------- TAB Minigame GROUP Others --------------------------------
 	Gui Font,w600
-	Gui Add,GroupBox,x124 y46 w128 h128,Other
+	Gui Add,GroupBox,x124 y46 w128 h128,Others
 	Gui Font
 	Gui Add,Text,x128 y58 w68 h14,Stabilizer Loop
 	Gui Add,Text,x128 y78 w64 h14,Sidebar Ratio
@@ -181,18 +191,21 @@ InitGui:
 	Gui Add,Edit,vMGSW x198 y96 w52 h17 gNumberEdit,%SideBarWait%
 	Gui Add,Edit,vMGCO x198 y116 w52 h17 gNumberEdit,%Coefficient%
 	Gui Add,Edit,vMGXP x198 y136 w52 h17 gNumberEdit,%Exponent%
-	Gui Add,GroupBox,x255 y46 w192 h128, Misc
+
+	; -------------------------------- TAB Minigame GROUP Misc --------------------------------
 	Gui Font,w600
-	Gui Add,Text,x258 y79 w96 h16, Manual Bar Size
+	Gui Add,GroupBox,x255 y46 w192 h128, Misc
 	Gui Font
-	Gui Add,Edit,gSubAll vBRC x331 y56 w36 h18,% ZTrim(BarControl)
-	Gui Add,Text,x258 y97 w36 h14,Control
-	Gui Add,Text,x333 y96 w133 h14,* Set to "Auto" for auto.
-	Gui Add,Button,gShowBar x260 y116 w80 h23,Visualize Bar
-	Gui Add,Button,gHideBar x+1 y116 w80 h23,Hide Bar
+	Gui Add,Text,x258 y60 w36 h14,Control
+	Gui Add,Edit,gSubAll vBRC x294 y58 w36 h18,% ZTrim(BarControl)
+	Gui Add,Text,x330 y60 w133 h14,* Set to "Auto" for auto.
+	Gui Add,Button,gShowBar x260 y78 w80 h23,Visualize Bar
+	Gui Add,Button,gHideBar x+1 y78 w80 h23,Hide Bar
 
 	; -------------------------------- TAB Locations --------------------------------
 	Gui Tab,5
+
+	; -------------------------------- TAB Locations Group Cryogenic Canal --------------------------------
 	Gui Add,GroupBox,x2 y21 w223 h77,Cryogenic Canal
 	CFH:=Chkd(FarmLocation="cryo"),CBC:=Chkd(buyConch)
 	Gui Add,CheckBox,vCBCF gSubAll x7 y36 w64 h18 %CFH%,Farm here
@@ -256,7 +269,7 @@ InitGui:
 	Gui Add,GroupBox,x270 y22 w228 h152,Position And Size
 	Gui Font
 	Gui Add,Text,x275 y37 w68 h14,Select Bound:
-	Gui Add,ComboBox,vDDBN gSubAll x276 y51 w119,CameraCheck|FishBar|ProgBar|LvlCheck|SellProfit|CameraMode|SellButton
+	Gui Add,ComboBox,vDDBN gSubAll x276 y51 w119,CameraCheck|FishBar|ProgBar|LvlCheck|SellProfit|CameraMode|SellButton|DaynNite
 	Gui Add,Text,x275 y75 w39 h23,X (Left):
 	Gui Add,Edit,x312 y75 w46 h18 gApplyBnd vBNX
 	Gui Add,UpDown,x341 y75 w18 h18 +0x80 Range-10000-10000 gApplyBnd vUDX
@@ -274,16 +287,16 @@ InitGui:
 	; -------------------------------- TAB Credits --------------------------------
 	Gui Tab,8
 	Gui Add,Link,x6 y22 w276 h14,This macro is based on the <a href="https://www.youtube.com/@AsphaltCake">AsphaltCake</a> Fisch Macro V11
-	Gui Add,Text,x6 y+4 w257 h14,Gui, modified minigame, polishing, and webhook by me.
-	Gui Add,Text,x6 y+4 w257 h14,Image webhook provided by @lunarosity, embed by me.
-	Gui Add,Text,x6 y+4 w257 h14,Themes and Lvl checker provided by @toxgt
-	Gui Add,Text,x6 y+4 w270 h14,Accurate Camera mode(sadly patched) by @b0red_man
-	Gui Add,Text,x6 y+4 w257 h14,Fish image webhook by @b0red_man
-	Gui Add,Text,x6 y+4 w257 h14,Logo design by @grubrescue
+	Gui Add,Text,x6 y+4 w257 h14,Gui, v12, polishing, and webhook by me.
+	;Gui Add,Text,x6 y+4 w257 h14,Image webhook provided by @lunarosity, embed by me.
+	;Gui Add,Text,x6 y+4 w257 h14,Themes and Lvl checker provided by @toxgt
+	;Gui Add,Text,x6 y+4 w270 h14,Accurate Camera mode(sadly patched) by @b0red_man
+	;Gui Add,Text,x6 y+4 w257 h14,Fish image webhook by @b0red_man
+	;Gui Add,Text,x6 y+4 w257 h14,Logo design by @grubrescue
 	;Gui Add,Link,x6 y+4 w252 h14,Check out my <a href="https://github.com/LopenaFollower">GitHub</a> and <a href="https://discord.gg/Fh5rmgg27X">Discord Server</a>
 	Gui Show,w500 h200,%GuiTitle%
 	Return
-	
+
 	TTT:
 		Gui Submit,NoHide
 		c:=A_GuiControl
@@ -427,9 +440,10 @@ InitGui:
 		AutoDay:=CBAD
 		ShakeMode:=DDSM
 		LowerGraphics:=CBLG
-		ZoomCamera:=CBZC
-		LookCamera:=CBLD
-		BlurCamera:=CBBRC
+		ZoomInCamera:=CBZC
+		LookDown:=CBLD
+		BlurShake:=CBBS
+		BlurMinigame:=CBBM
 		ShutdownAfterFailLimit:=CBSF
 		WebhookURL:=Trim(WURL)
 		UseWebhook:=CBWH
@@ -439,9 +453,9 @@ InitGui:
 		GuiAlwaysOnTop:=CBOT
 		CheckLvlEveryN:=Max(5,CLEN)
 		SendScreenshotFL:=CBSS
-
 		NotifyImg:=CBSI
 		ImgNotifEveryN:=SIEN
+		LvlUpMode:=DDSS
 		SelectedBound:=DDBN
 		AutoSell:=CBGS
 		SendSellProfit:=CBSP
@@ -451,7 +465,7 @@ InitGui:
 		SendFishWhenTimeOn:=CBFTSO
 		SendFishWhenTimeValue:=CBFTSV
 		ShowTooltips:=CBST
-		ShakeFailsafe:=SF
+		ShakeFailsafe:=SHF
 		GraphicsDelay:=GD
 		ZoomDelay:=ZD
 		LookDelay:=LD
@@ -459,7 +473,6 @@ InitGui:
 		FailLimit:=FL
 		BarControl:=BRC
 		ManualBarSize:=(BRC="auto")?0:0.403691381*WW*(0.3+BRC)
-
 		If Trim(DDBN)!=""
 			Gosub SelectBound
 		If CBCF
@@ -467,6 +480,8 @@ InitGui:
 		Else
 			FarmLocation:="none"
 		buyConch:=CBBC
+		If(DDSS!="Off")
+			downloadTesseract()
 		WinSet,AlwaysOnTop,%CBOT%,%GuiTitle%
 		If CBAS
 			Goto SaveSettings

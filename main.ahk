@@ -10,7 +10,7 @@ SetWinDelay,-1
 ; -------------------------------- Roblox Checker --------------------------------
 
 If !(A_IsUnicode=1&&A_PtrSize=4){
-	MsgBox,64,,Running AutoHotkeyU32,.8
+	MsgBox,64,,Running AutoHotkeyU32,1
 	SplitPath,A_AhkPath,,dir
 	Run,%dir%\AutoHotkeyU32.exe "%A_ScriptFullPath%" 
 	ExitApp
@@ -23,7 +23,7 @@ If WinActive("Roblox"){
 	Send {Shift up}
 }
 
-; -------------------------------- Variables --------------------------------
+; -------------------------------- Divider --------------------------------
 
 SetKeyDelay,-1
 SetMouseDelay,-1
@@ -32,16 +32,10 @@ ListLines 0
 Process,Priority,,H
 SetControlDelay,-1
 SetTitleMatchMode 2
-CoordMode,Pixel,Relative
-CoordMode,Mouse,Relative
-
 #Include %A_ScriptDir%\Lib
 #Include Gdip_All.ahk
-
-VersionNum:=1
-ChangeNum:=0
-BuildNum:=2
-GuiTitle=Fisch V%VersionNum%.%ChangeNum%.%BuildNum% by blankimage
+BuildNum:=35
+GuiTitle=Fisch V1.4.%BuildNum% by 0x3b5
 DirPath:=A_ScriptDir
 WW:=A_ScreenWidth
 WH:=A_ScreenHeight
@@ -53,8 +47,8 @@ SkinsPath:=DirPath "\skins"
 SettingsPath:=DirPath "\general.txt"
 BoundsPath:=DirPath "\bounds.txt"
 DefMGPath:=DirPath "\Minigame\default.txt"
+TesseractPath:="C:\Program Files\Tesseract-OCR\tesseract.exe"
 VersionPath:=DirPath "\ver.txt"
-
 If !FileExist(DirPath)
 	FileCreateDir,%DirPath%
 If !FileExist(LibPath)
@@ -64,28 +58,27 @@ If !FileExist(MGPath)
 If !FileExist(DefMGPath)
 	FileAppend,[Values]`nStabilizerLoop=20`nSideBarRatio=0.75`nSideBarWait=1.42`nRightMult=2.6414`nRightDiv=1.8961`nRightAnkleMult=1.274`nLeftMult=2.9892`nLeftDiv=4.6235`nCoefficient=1.97109`nExponent=0.810929,%DefMGPath%
 If !FileExist(VersionPath)
-	FileAppend,%VersionNum%.%ChangeNum% %BuildNum%,%VersionPath%
+	FileAppend,1.4 %BuildNum%,%VersionPath%
 IniRead,curVer,%SettingsPath%,.,v
 configVer:="15"
 If(curVer!=configVer){
 	Gosub DefaultSettings
 	IniWrite,%configVer%,%SettingsPath%,.,v
 }
-
-
 ReadGen(BarControl,"Control")
 ReadGen(ShakeMode,"ShakeMode")
 ReadGen(NavigationKey,"NavKey")
 ReadGen(ShakeDelay,"ShakeDelay")
-ReadGen(ShakeOnly,"ShakeOnly")
 ReadGen(ShakeFailsafe,"ShakeFailsafe")
+ReadGen(ShakeOnly,"ShakeOnly")
 ReadGen(StartHotkey,"StartHotkey")
 ReadGen(ReloadHotkey,"ReloadHotkey")
 ReadGen(ExitHotkey,"ExitHotkey")
 ReadGen(LowerGraphics,"LowerGraphics")
 ReadGen(ZoomCamera,"ZoomCamera")
-ReadGen(LookCamera,"LookCamera")
-ReadGen(BlurCamera,"BlurCamera")
+ReadGen(LookDown,"LookDown")
+ReadGen(BlurShake,"BlurShake")
+ReadGen(BlurMinigame, "BlurMinigame")
 ReadGen(ShutdownAfterFailLimit,"ShutdownAfterFailLimit")
 ReadGen(GraphicsDelay,"GraphicsDelay")
 ReadGen(ZoomDelay,"ZoomDelay")
@@ -112,6 +105,9 @@ ReadGen(curMGFile,"SelectedConfig")
 ReadGen(SelectedSkin,"SelectedTheme")
 ReadGen(FarmLocation,"FarmLocation")
 ReadGen(buyConch,"PurchaseConch")
+ReadGen(AutoAurora,"AutoAurora")
+ReadGen(AutoNight,"AutoNight")
+ReadGen(AutoDay,"AutoDay")
 ReadGen(GuiAlwaysOnTop,"AlwaysOnTop")
 ReadGen(AutoSell,"AutoSell")
 ReadGen(AutoSellInterval,"AutoSellInterval")
@@ -121,7 +117,6 @@ ReadGen(ScreenshotDelay,"ScreenshotDelay")
 ReadGen(SendFishWhenTimeOn,"SendFishWhenTimeOn")
 ReadGen(SendFishWhenTimeValue,"SendFishWhenTimeValue")
 ReadGen(ShowTooltips,"ShowTooltips")
-CameraDelay:=25
 If(SelectedSkin!="none"){
 	sl:=SkinsPath "\"SelectedSkin
 	If FileExist(sl)
@@ -167,7 +162,7 @@ runtime2:=0
 cryoCanal:={CF:False}
 XOdebounce:=True
 SelectedBound:=""
-boundNames:=["CameraCheck","FishBar","ProgBar","LvlCheck","SellProfit","CameraMode","SellButton"]
+boundNames:=["CameraCheck","FishBar","ProgBar","LvlCheck","SellProfit","CameraMode","SellButton","DaynNite"]
 instructions:=FetchInstructions()
 SetTimer,GuiRuntime,1000
 Gosub Calculations
@@ -183,15 +178,16 @@ DefaultSettings:
 	RtrvGen("ShakeMode","Click")
 	RtrvGen("NavKey","\")
 	RtrvGen("ShakeDelay",35)
+	RtrvGen("ShakeFailsafe",15)
 	RtrvGen("ShakeOnly",0)
-	RtrvGen("ShakeFailsafe",10)
 	RtrvGen("StartHotkey","F1")
 	RtrvGen("ReloadHotkey","F2")
 	RtrvGen("ExitHotkey","F3")
 	RtrvGen("LowerGraphics",1)
 	RtrvGen("ZoomCamera",1)
-	RtrvGen("LookCamera",1)
-	RtrvGen("BlurCamera",1)
+	RtrvGen("LookDown",1)
+	RtrvGen("BlurShake",1)
+	RtrvGen("BlurMinigame",1)
 	RtrvGen("ShutdownAfterFailLimit",1)
 	RtrvGen("GraphicsDelay",50)
 	RtrvGen("ZoomDelay",40)
@@ -218,6 +214,9 @@ DefaultSettings:
 	RtrvGen("SelectedTheme","none")
 	RtrvGen("FarmLocation","none")
 	RtrvGen("PurchaseConch",1)
+	ReadGen("AutoAurora",0)
+	ReadGen("AutoNight",0)
+	ReadGen("AutoDay",0)
 	RtrvGen("AlwaysOnTop",1)
 	RtrvGen("AutoSell",0)
 	RtrvGen("AutoSellInterval",25)
@@ -233,15 +232,16 @@ SaveSettings:
 	WriteGen("ShakeMode",ShakeMode)
 	WriteGen("NavKey",NavigationKey)
 	WriteGen("ShakeDelay",ShakeDelay)
-	WriteGen("ShakeOnly",ShakeOnly)
 	WriteGen("ShakeFailsafe",ShakeFailsafe)
+	WriteGen("ShakeOnly",ShakeOnly)
 	WriteGen("StartHotkey",StartHotkey)
 	WriteGen("ReloadHotkey",ReloadHotkey)
 	WriteGen("ExitHotkey",ExitHotkey)
 	WriteGen("LowerGraphics",LowerGraphics)
 	WriteGen("ZoomCamera",ZoomCamera)
-	WriteGen("LookCamera",LookCamera)
-	WriteGen("BlurCamera",BlurCamera)
+	WriteGen("LookDown",LookDown)
+	WriteGen("BlurShake",BlurShake)
+	WriteGen("BlurMinigame",BlurMinigame)
 	WriteGen("ShutdownAfterFailLimit",ShutdownAfterFailLimit)
 	WriteGen("GraphicsDelay",GraphicsDelay)
 	WriteGen("ZoomDelay",ZoomDelay)
@@ -268,6 +268,9 @@ SaveSettings:
 	WriteGen("SelectedTheme",SelectedSkin)
 	WriteGen("FarmLocation",FarmLocation)
 	WriteGen("PurchaseConch",buyConch)
+	WriteGen("AutoAurora",AutoAurora)
+	WriteGen("AutoNight",AutoNight)
+	WriteGen("AutoDay",AutoDay)
 	WriteGen("AlwaysOnTop",GuiAlwaysOnTop)
 	WriteGen("AutoSell",AutoSell)
 	WriteGen("AutoSellInterval",AutoSellInterval)
@@ -285,8 +288,10 @@ GuiRuntime:
 	GuiControl,Text,TFC,% FishCaught " / "FishLost " ("RegExReplace(FishCaught/CatchCount*100,"(?<=\.\d{3}).*$") "%)"
 Return
 ReloadMacro:
-	If(FishCaught>0)
+	If(FishCaught>0){
 		SendStatus(2,[FishCaught])
+		Sleep 100
+	}
 	Reload
 Return
 ExitMacro:
@@ -310,6 +315,11 @@ StartMacro:
 	SendStatus(1)
 	Sleep 150
 	Gosub MoveGui
+	if AutoDay{
+		UpdateTask("Current Task: Using Sundial Totem")
+		Sleep 10
+		
+	}
 	If GuiAlwaysOnTop
 		GuiControl,Choose,Tabs,1
 	SetTimer,Failsafe3,1000
@@ -351,11 +361,11 @@ StartMacro:
 Return
 RestartMacro:
 	WinActivate,Roblox
-	If AutoBlurShake{
+	If BlurShake{
 		UpdateTask("Current Task: Blur Camera")
 		Sleep 500
 		Send {``}
-		Sleep AutoBlurDelay
+		Sleep BlurDelay
 	}
 	If(FarmLocation=="cryo"&&!cryoCanal.CF){
 		UpdateTask("Current Task: Walking To Cryogenic Canal")
@@ -430,7 +440,7 @@ RestartMacro:
 		cryoCanal.CF:=True
 	}
 	MouseMove,LookDownX,LookDownY
-	If LookCamera{
+	If LookDown{
 		UpdateTask("Current Task: Look Down")
 		Send {RButton up}
 		Loop,5{
@@ -476,14 +486,14 @@ Failsafe2:
 	}
 Return
 Failsafe3:
-    if (ShutdownAfterFailLimit && FailsInARow >= FailLimit) {
-        SetTimer, Failsafe3, Off
-        SendStatus(4, ["Failsafe triggered too many times, shutting down.", FailsInARow])
-        Sleep 25
-        Shutdown, 1
-        Goto ExitMacro
-    }
-    runtime2++
+	If(ShutdownAfterFailLimit&&FailsInARow>FailLimit){
+		SetTimer,Failsafe3,Off
+		SendStatus(4,["Failsafe triggered too many times, shutting down.",FailsInARow])
+		Sleep 25
+		Shutdown,1
+		Goto ExitMacro
+	}
+	runtime2++
 Return
 Failsafe4:
 	If(A_TickCount-SellingStart>20000){
@@ -501,7 +511,7 @@ backUp:
 	If BlurMinigame
 		Send {``}
 	CameraMode(False)
-	Sleep 150
+	Sleep 150	
 	If buyConch{
 		Send {s down}
 		Sleep 600

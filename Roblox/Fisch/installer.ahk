@@ -2,9 +2,9 @@
 #SingleInstance Force
 #Persistent
 
-global versionUrl:="https://raw.githubusercontent.com/Steven55704/AHK-Macro/refs/heads/main/version.txt"
-global DownloadUrl:="https://raw.githubusercontent.com/Steven55704/AHK-Macro/refs/heads/main/main.ahk"
-global AssetsUrl:="https://raw.githubusercontent.com/Steven55704/AHK-Macro/refs/heads/main/Assets/"
+global versionUrl:="https://raw.githubusercontent.com/Steven55704/AHK-Macro/refs/heads/main/Roblox/Fisch/version.txt"
+global DownloadUrl:="https://raw.githubusercontent.com/Steven55704/AHK-Macro/refs/heads/main/Roblox/Fisch/main.ahk"
+global AssetsUrl:="https://raw.githubusercontent.com/Steven55704/AHK-Macro/refs/heads/main/Roblox/Fisch/Assets/"
 
 global SkinDllUrl:=AssetsUrl "SkinHu.dll"
 Gui -MaximizeBox -MinimizeBox

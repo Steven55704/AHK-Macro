@@ -1,3 +1,3 @@
-## AutoHotkey (Macro)
+# AutoHotkey (Macro)
 
-# Made for afk farming games
+## Made for afk farming games
